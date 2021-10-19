@@ -17,6 +17,7 @@ import os
 os.system ("sudo pigpiod")
 import pigpio
 
+#Connect the orange wire of Servo Motor to #PIN 17
 GPIO1=4  #Motor1 signal from GPIO PIN #4.
 GPIO2=25  #Motor2 signal from GPIO PIN #25.
 p1 = pigpio.pi();
@@ -87,7 +88,7 @@ def receive():
             sv, m1, m2 = [int(i) for i in conn.recv(1024).decode().split('\n')]
             print("servovalue:",sv , " motorvalue1:",m1 , " motorvalue2=", m2)
             motor1(m1)
-            motor2(m2)
+            motor2(m1)
             servo(sv)
              
         except:
@@ -111,6 +112,7 @@ def motor1(slidervalue):
     while True:
         value = int(slidervalue)*5 + 1500
         p1.set_servo_pulsewidth(GPIO1, value)
+        p2.set_servo_pulsewidth(GPIO2, value)
         #print("pwm in ns:", value)#ns =nanosecond
         break
 
@@ -143,8 +145,9 @@ p.ChangeDutyCycle(12.5)   #duty cycle of 12.5% means +90degree angle
 """
 
 def stop1():
-    # Stop motor 1
+    # Stop both motors
     p1.set_servo_pulsewidth(GPIO1, 0)
+    p2.set_servo_pulsewidth(GPIO2, 0)
     print("Movement stopped")
 def stop2():
     # Stop motor 2
@@ -162,16 +165,16 @@ def close_window():
 # GUI
 app = App(title="Motor Touch Control", width=480, height=320, layout="grid")
 
-motor1text = Text(app, text="motor1", grid=[0,3])
-motor2text = Text(app, text="motor2", grid=[0,5])
+motor1text = Text(app, text="motors", grid=[0,3])
+#motor2text = Text(app, text="motor2", grid=[0,5])
 servotext = Text(app, text="servo(angle)", grid=[0,7])
 
 motor1_slider = Slider(app,height=35 , width=200, command=motor1, start=-100, end=100, grid=[0,4])
-motor2_slider = Slider(app,height=35 ,width=200, command=motor2, start=-100, end=100, grid=[0,6])
+#motor2_slider = Slider(app,height=35 ,width=200, command=motor2, start=-100, end=100, grid=[0,6])
 servo_slider = Slider(app,height=35 ,width=350, command=servo, start=-90, end=90, grid=[0,8])
 
-motor1stop = PushButton(app, command=stop1, text="Stop motor1", grid=[1,4])
-motor2stop = PushButton(app, command=stop2, text="Stop motor2", grid=[1,6])
+motor1stop = PushButton(app, command=stop1, text="Stop motors", grid=[1,4])
+#motor2stop = PushButton(app, command=stop2, text="Stop motor2", grid=[1,6])
 close = PushButton(app, command=close_window, text="EXIT", grid=[1,8])
 
 
@@ -179,30 +182,3 @@ if __name__ == '__main__':
     conn = initialize_server()
     receive()
     app.display()
-"""    
-    while True:
-        if(not connected):
-            try:
-                conn = initialize_server()
-                
-                #data = conn.recv(1024)
-                #msg = data.decode('ascii')
-                
-                #receive all three slidervalues
-                sv, m1, m2 = [int(i) for i in conn.recv(1024).decode().split('\n')]
-                #if m1 != "":
-                print("servovalue:",sv , " motorvalue1:",m1 , " motorvalue2=", m2)
-                motor1(m1)
-                motor2(m2)
-                servo(sv)
-                    
-            except:
-                pass
-                print("Connection is lost")
-                #Stop all motors when connection is lost
-                motor1(0)
-                motor2(0)
-                
-        else
- """
-    
