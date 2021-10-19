@@ -1,5 +1,5 @@
 # ASM-FSB-motor-control
-Raspberry Pi + Motor Controllers: Controlling various electrical motors (Servo-, DC-, brushless DC-motors) remotely between two Raspberry Pi's
+Raspberry Pi: Controlling Servo- and brushless DC-motors remotely between two Raspberry Pi's
 ## Purpose of this project
 The goal of this project is to control electrical motors with a Raspberry Pi. This includes in the two (brushless) DC motors and a servo motor, whose speed can be changed independently from each other with a grafical user interface (GUI).
 The motors, which are implemented to the boot can be controlled remotely via socket communication between two Raspberry Pi's. The server is the hardware on the boat with the motors attached and the client is another Raspberry Pi, which can control the servers motors remotely.
