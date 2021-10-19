@@ -161,7 +161,7 @@ def close_window():
     conn.close()
     app._close_window()
     
-    
+"""    
 # GUI
 app = App(title="Motor Touch Control", width=480, height=320, layout="grid")
 
@@ -176,7 +176,7 @@ servo_slider = Slider(app,height=35 ,width=350, command=servo, start=-90, end=90
 motor1stop = PushButton(app, command=stop1, text="Stop motors", grid=[1,4])
 #motor2stop = PushButton(app, command=stop2, text="Stop motor2", grid=[1,6])
 close = PushButton(app, command=close_window, text="EXIT", grid=[1,8])
-
+"""
 
 if __name__ == '__main__':
     conn = initialize_server()
