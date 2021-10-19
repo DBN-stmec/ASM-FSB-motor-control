@@ -25,6 +25,22 @@ def initialize_client():
     
     return s
 
+def reconnect():
+    print("reconnecting...")
+    connected = False
+    #recreate socket
+    s = socket.socket()
+    
+    while not connected:
+        try:
+            s.connect(('192.168.137.125', 5560))
+            connected = True
+            print("sucessfully reconnected")
+        except socket.error:
+            print("reconnecting failed")
+            time.sleep(2)
+    
+
 
 # function to send variable to server
 def send():
@@ -45,41 +61,13 @@ def receive():
         except:
             pass
 
-"""
-#DC-Motor control with Adafruit HAT
-kit = MotorKit()
-
-def motor1(slidervalue):
-    value = int(slidervalue) / 100
-    kit.motor1.throttle = value
-    print(value)
-
-def motor2(slidervalue):
-    value = int(slidervalue) / 100
-    kit.motor2.throttle = value
-    print(value)
-
-def stop1():
-    #Stop all movement.
-    kit.motor1.throttle = 0
-    print("Movement value:",kit.motor1.throttle)
-def stop2():
-    #Stop all movement.
-    kit.motor2.throttle = 0
-    print("Movement value:", kit.motor1.throttle)
-"""
 
 """
 #Servo-motor control via PWM directly from Raspberry Pi GPIO
-servoPIN = 17    #Motor signal from GPIO PIN 17
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(servoPIN, GPIO.OUT)
+servoPIN = 17    #Servo Motor signal from GPIO PIN 17
+Motor1PIN = 4    #Motor1 signal from GPIO PIN 4
+Motor1PIN = 25   #Motor2 signal from GPIO PIN 25
 
-p = GPIO.PWM(servoPIN, 50) # GPIO 17 for PWM with 50Hz
-p.start(7.5) # Initialization
-"""
-
-"""
 With p.ChangeDutyCycle(value) we can change the servo position by entering the DUTY Cycle value
 p.ChangeDutyCycle(2.5)   #duty cycle of 2.5% means -90degree angle
 p.ChangeDutyCycle(7.5)   #duty cycle of 7.5% means 0degree angle
@@ -94,24 +82,23 @@ def close_window():
     app._close_window()
     s.close()
 
-stop=0
+
 
 def makestop():
-    global stop
-    stop = 1
-    close_window()
+    s.sendall(str.encode("\n".join([str(servo_slider.value), str(0), str(0)])))
     
 app = App(title="Motor Touch Control", width=480, height=320, layout="grid")
 #infotext = Text(app, text="Control the speed and direction of the boat", grid=[0,0])
 #infotext.text_size=10
 #testbutton = PushButton(app, command=testfunc, text="Testbutton", grid=[0,2])
-motor1text = Text(app, text="motor1", grid=[0,3])
-motor2text = Text(app, text="motor2", grid=[0,5])
+motor1text = Text(app, text=" both motors", grid=[0,3])
+#motor2text = Text(app, text="motor 2", grid=[0,5])
 servotext = Text(app, text="servo(angle)", grid=[0,7])
-motor1_slider = Slider(app,height=35 , width=200, command=send, start=-100, end=100, grid=[0,4])
+motor1_slider = Slider(app,height=35 , width=200, command=send, start=-50, end=50, grid=[0,4])
 motor2_slider = Slider(app,height=35 ,width=200, command=send, start=-100, end=100, grid=[0,6])
 servo_slider = Slider(app,height=35 ,width=350, command=send, start=-90, end=90, grid=[0,8])
-#motor1stop = PushButton(app, command=stop1, text="Stop motor1", grid=[1,4])
+reconnect = PushButton(app, command=reconnect, text="reconnect", grid=[1,4])
+motor1stop = PushButton(app, command=makestop, text="Stop motors", grid=[1,4])
 #motor2stop = PushButton(app, command=stop2, text="Stop motor2", grid=[1,6])
 close = PushButton(app, command=close_window, text="EXIT", grid=[1,8])
 
@@ -119,16 +106,3 @@ close = PushButton(app, command=close_window, text="EXIT", grid=[1,8])
 if __name__ == '__main__':
     s = initialize_client()
     app.display()
-    
-    """
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = '192.168.137.125'
-    port = 5560
-    # connect to this server
-    s.connect((host, port))
-    app.display()
-"""
-            
-
-
-
