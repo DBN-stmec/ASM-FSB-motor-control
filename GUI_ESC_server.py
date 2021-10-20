@@ -181,4 +181,4 @@ close = PushButton(app, command=close_window, text="EXIT", grid=[1,8])
 if __name__ == '__main__':
     conn = initialize_server()
     receive()
-    app.display()
+    #app.display()
